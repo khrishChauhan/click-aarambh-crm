@@ -4,6 +4,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import AppLayout from "@/components/AppLayout";
 import "./globals.css";
 
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata = {
@@ -25,6 +26,7 @@ export default function RootLayout({
           </ThemeProvider>
         </AntdRegistry>
       </body>
+
     </html>
   );
 }
