@@ -3,7 +3,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import SectionCard from "../common/SectionCard";
-import { useTheme } from "../ThemeProvider";
+
 
 const Pie = dynamic(() => import("@ant-design/plots").then((mod) => mod.Pie), { ssr: false });
 

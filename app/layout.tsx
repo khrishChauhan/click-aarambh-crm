@@ -12,6 +12,8 @@ export const metadata = {
   description: "Modern CRM dashboard",
 };
 
+import CursorGlow from "@/components/effects/CursorGlow";
+
 export default function RootLayout({
   children,
 }: {
@@ -22,11 +24,11 @@ export default function RootLayout({
       <body className={inter.className} style={{ margin: 0, padding: 0 }}>
         <AntdRegistry>
           <ThemeProvider>
+            <CursorGlow />
             <AppLayout>{children}</AppLayout>
           </ThemeProvider>
         </AntdRegistry>
       </body>
-
     </html>
   );
 }

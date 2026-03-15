@@ -78,11 +78,11 @@ export default function LeadsPage() {
           icon={<PlusOutlined />} 
           onClick={() => setModalVisible(true)}
           size="large"
-          style={{ backgroundColor: "#82C21C", borderColor: "#82C21C" }}
-          className="hover:opacity-90 transition-opacity"
+          className="neumorphic-button-accent"
         >
           Add New Lead
         </Button>
+
       }
     >
       <SectionCard className="p-0">

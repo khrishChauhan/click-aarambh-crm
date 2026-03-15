@@ -8,7 +8,9 @@ import {
   MenuUnfoldOutlined,
   BellOutlined,
   LogoutOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
+
 
 import { useRouter } from "next/navigation";
 import { logout } from "@/lib/auth";
@@ -52,8 +54,9 @@ const Header: React.FC<HeaderProps> = ({
         background: "#0E2B27",
         borderBottom: "1px solid #1E2B27",
         lineHeight: isMobile ? "56px" : "64px",
-        overflow: "hidden"
+        overflow: "hidden",
       }}
+
     >
       <NoiseTexture />
       <div className="flex items-center justify-between h-full relative z-10 w-full">
@@ -64,19 +67,20 @@ const Header: React.FC<HeaderProps> = ({
           type="text"
           icon={isMobile ? <MenuOutlined /> : (collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />)}
           onClick={isMobile ? onShowMobileMenu : onToggleCollapse}
+          className="neumorphic-button ml-5"
           style={{ 
             color: "#E6F0ED",
             fontSize: "18px",
             width: 40,
             height: 40,
+            padding: 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "center"
           }}
-          className="hover:bg-white/5 transition-colors"
         />
         <h1 
-          className="m-0 text-[18px] font-semibold tracking-tight truncate border-l border-[#1A1A1A] pl-4"
+          className="m-0 text-[18px] font-semibold tracking-tight truncate border-l border-[#1E2B27] pl-4"
           style={{ color: "#E6F0ED" }}
         >
           {pageTitle}
@@ -86,53 +90,58 @@ const Header: React.FC<HeaderProps> = ({
       {/* Right Section */}
       <div className="flex items-center gap-4">
 
-        <Space size={16}>
+        <Space size={12} align="center" className="h-full">
           <Tooltip title="Notifications">
-            <Badge dot offset={[-2, 6]} color="#FF4D4F">
+            <Badge dot offset={[-2, 6]} color="#82C21C">
               <Button
                 type="text"
                 icon={<BellOutlined />}
+                className="neumorphic-button"
                 style={{ 
                   color: "#E6F0ED", 
                   fontSize: "20px",
+                  width: 40,
+                  height: 40,
+                  padding: 0,
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  lineHeight: 1
                 }}
-                className="group hover:bg-white/5 transition-all"
               />
             </Badge>
           </Tooltip>
           
-          <div className="flex items-center gap-3 cursor-pointer group px-2 py-1 rounded-lg hover:bg-white/5 transition-all">
-            <Avatar 
-              size={32}
-              style={{ backgroundColor: "#82C21C", fontWeight: 700, color: "#FFFFFF" }}
-              className="group-hover:scale-110 transition-transform shadow-[0_0_10px_rgba(130,194,28,0.3)]"
-            >
-              KC
-            </Avatar>
-            {!isMobile && (
-              <span className="text-sm font-semibold" style={{ color: "#FFFFFF" }}>
-                Khrish
-              </span>
-            )}
+          <div 
+            className="flex items-center justify-center cursor-pointer px-4 neumorphic-button"
+            style={{ height: 40, lineHeight: 1 }}
+          >
+            <span className="text-sm font-semibold" style={{ color: "#E6F0ED" }}>
+              Admin
+            </span>
           </div>
 
           <Button
             type="text"
             onClick={handleLogout}
+            className="neumorphic-button mr-5"
             style={{ 
               color: "#E6F0ED", 
               fontWeight: 600,
-              fontSize: "14px"
+              fontSize: "14px",
+              height: 40,
+              padding: "0 16px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              lineHeight: 1
             }}
-            className="hover:text-[#82C21C] transition-colors px-2"
           >
             Logout
           </Button>
-
         </Space>
+
+
       </div>
       </div>
     </AntHeader>

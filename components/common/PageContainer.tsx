@@ -21,9 +21,10 @@ const PageContainer: React.FC<PageContainerProps> = ({ children, title, descript
           <TypingTitle text={title} />
           {description && (
             <div className="-mt-5">
-              <Text style={{ color: "#E6F0ED", fontSize: "14px", opacity: 0.85 }}>
+              <Text style={{ color: "#9BA7A3", fontSize: "14px" }}>
                 {description}
               </Text>
+
             </div>
           )}
 

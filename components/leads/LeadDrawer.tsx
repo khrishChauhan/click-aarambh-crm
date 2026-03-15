@@ -42,22 +42,19 @@ const LeadDrawer: React.FC<LeadDrawerProps> = ({
       styles={{ 
         body: { 
           padding: "24px",
-          background: "rgba(17, 28, 24, 0.6)",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
+          background: "#111C18",
         },
         header: { 
-          background: "rgba(17, 28, 24, 0.7)",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+          background: "#15221E",
+          borderBottom: "1px solid #1E2B27",
           padding: "20px 24px"
         },
         content: {
-          background: "transparent",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+          background: "#111C18",
+          borderLeft: "1px solid #1E2B27",
         }
       }}
+
 
       extra={
         <Space>
@@ -69,10 +66,24 @@ const LeadDrawer: React.FC<LeadDrawerProps> = ({
                 okText="Yes"
                 cancelText="No"
               >
-                <Button type="text" danger icon={<DeleteOutlined />} />
+                <Button 
+                  type="text" 
+                  danger 
+                  icon={<DeleteOutlined />} 
+                  className="neumorphic-button"
+                  style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}
+                />
               </Popconfirm>
            )}
-           <Button type="text" icon={<CloseOutlined />} onClick={onClose} />
+           <Button 
+            type="text" 
+            icon={<CloseOutlined />} 
+            onClick={onClose} 
+            className="neumorphic-button"
+            style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", color: "#E6F0ED" }}
+          />
+
+
         </Space>
       }
       closable={false}

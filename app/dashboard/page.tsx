@@ -21,7 +21,8 @@ export default function Dashboard() {
       title="Dashboard Overview" 
       description="Welcome back! Here's a summary of your lead performance and activity."
     >
-      <div className="dashboard-grid" style={{ perspective: "1000px" }}>
+      <div className="dashboard-grid">
+
         <Row gutter={[24, 24]} className="mb-8">
           <Col xs={24} sm={12} lg={6}>
             <StatCard 

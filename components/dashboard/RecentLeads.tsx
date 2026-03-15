@@ -24,12 +24,12 @@ const RecentLeads: React.FC = () => {
           <List.Item style={{ borderBottom: "1px solid #1E2B27", cursor: "pointer" }} className="hover:bg-white/5 transition-colors px-2 rounded-lg">
             <List.Item.Meta
               avatar={
-                <Avatar 
-                  size={40} 
-                  style={{ backgroundColor: "#1E2B27", color: "#82C21C", fontWeight: 700 }}
-                >
-                  {item.name.split(' ').map(n => n[0]).join('')}
-                </Avatar>
+                <div className="w-10 h-10 flex items-center justify-center mr-3 neumorphic-logo">
+                   <span className="text-[#82C21C] font-bold text-sm">
+                     {item.name.split(' ').map(n => n[0]).join('')}
+                   </span>
+                </div>
+
               }
               title={
                 <div className="flex justify-between items-center">

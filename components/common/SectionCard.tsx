@@ -20,10 +20,11 @@ const SectionCard: React.FC<SectionCardProps> = ({ children, title, extra, class
           style={{ borderBottom: "1px solid #1E2B27" }}
         >
           {title && (
-            <Text strong style={{ fontSize: "16px", color: "#FFFFFF" }}>
+            <Text strong style={{ fontSize: "16px", color: "#E6F0ED" }}>
               {title}
             </Text>
           )}
+
           {extra && <div>{extra}</div>}
         </div>
       )}

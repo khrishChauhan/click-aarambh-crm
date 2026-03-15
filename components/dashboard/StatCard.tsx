@@ -4,9 +4,9 @@ import React from "react";
 import { Typography, Space } from "antd";
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import SectionCard from "../common/SectionCard";
-import { useTheme } from "../ThemeProvider";
 
 const { Text, Title } = Typography;
+
 
 interface StatCardProps {
   title: string;
@@ -23,10 +23,11 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, trendUp 
         <div 
           className="p-3 rounded-xl flex items-center justify-center"
           style={{ 
-            background: "rgba(130, 194, 28, 0.15)",
-            border: "1px solid rgba(130, 194, 28, 0.2)"
+            background: "#0E2B27",
+            border: "1px solid #1E2B27"
           }}
         >
+
           {React.isValidElement(icon) ? (
             React.cloneElement(icon as React.ReactElement<any>, { 
               style: { fontSize: "20px", color: "#82C21C" } 
@@ -38,20 +39,21 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, trendUp 
       </div>
 
       <Space direction="vertical" size={4} className="w-full">
-        <Text style={{ color: "#E6F0ED", fontSize: "14px", fontWeight: 500, opacity: 0.9 }}>
+        <Text style={{ color: "#9BA7A3", fontSize: "14px", fontWeight: 500 }}>
           {title}
         </Text>
         <div className="flex items-end justify-between">
-          <Title level={3} style={{ margin: 0, fontWeight: 800, color: "#FFFFFF" }}>
+          <Title level={3} style={{ margin: 0, fontWeight: 700, color: "#FFFFFF" }}>
             {value}
           </Title>
           
           {trend && (
             <div 
-              className="flex items-center px-2 py-1 rounded-full text-xs font-bold"
+              className="flex items-center px-2 py-1 rounded-md text-xs font-semibold"
               style={{ 
-                color: trendUp ? "#FFFFFF" : "#FFFFFF",
-                background: trendUp ? "#52C41A" : "#FF4D4F",
+                color: trendUp ? "#82C21C" : "#FF4D4F",
+                background: trendUp ? "rgba(130, 194, 28, 0.1)" : "rgba(255, 77, 79, 0.1)",
+                border: trendUp ? "1px solid rgba(130, 194, 28, 0.15)" : "1px solid rgba(255, 77, 79, 0.15)"
               }}
             >
               {trendUp ? <ArrowUpOutlined className="mr-1" /> : <ArrowDownOutlined className="mr-1" />}
@@ -60,6 +62,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend, trendUp 
           )}
         </div>
       </Space>
+
 
     </SectionCard>
   );

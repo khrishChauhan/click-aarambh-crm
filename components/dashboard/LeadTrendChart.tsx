@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { Select } from "antd";
 import SectionCard from "../common/SectionCard";
-import { useTheme } from "../ThemeProvider";
+
 
 // Dynamic import to avoid SSR issues with charts
 const Area = dynamic(() => import("@ant-design/plots").then((mod) => mod.Area), { ssr: false });
@@ -76,7 +76,7 @@ const LeadTrendChart: React.FC = () => {
       tooltip: {
         render: (event: any, { title, items }: any) => {
           return `
-            <div style="padding: 12px; background: #151515; border: 1px solid #1A1A1A; border-radius: 8px;">
+            <div style="padding: 12px; background: #111C18; border: 1px solid #1E2B27; border-radius: 8px;">
               <div style="color: #9BA7A3; margin-bottom: 4px; font-size: 12px;">${title}</div>
               <div style="color: #FFFFFF; font-weight: bold; font-size: 16px;">
                 <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #82C21C; margin-right: 8px;"></span>
@@ -87,6 +87,7 @@ const LeadTrendChart: React.FC = () => {
         }
       }
     }
+
   };
 
   return (

@@ -11,12 +11,53 @@ body {
 
 
 
-/* Custom shadow for dark cards */
-.premium-shadow {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+/* Neumorphic Styles */
+.neumorphic-button {
+  background: #0E2B27 !important;
+  color: #E6F0ED !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.45), inset -3px -3px 8px rgba(255, 255, 255, 0.03) !important;
+  transition: all 0.2s ease !important;
+  transform: translateY(1px);
 }
 
-.custom-table .ant-table-wrapper {
-  border-radius: 8px;
-  overflow: hidden;
+.neumorphic-button:hover, .neumorphic-button:active {
+  transform: translateY(2px) !important;
+  box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.6), inset -4px -4px 12px rgba(255, 255, 255, 0.04) !important;
+}
+
+
+
+
+
+.neumorphic-button-accent {
+  background: #82C21C !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.3), inset -3px -3px 8px rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.2s ease !important;
+  transform: translateY(1px);
+}
+
+.neumorphic-button-accent:hover, .neumorphic-button-accent:active {
+  transform: translateY(2px) !important;
+  box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.4), inset -4px -4px 12px rgba(255, 255, 255, 0.2) !important;
+}
+
+
+
+
+
+.neumorphic-logo {
+  background: #0E2B27 !important;
+  border-radius: 12px !important;
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.4), inset -3px -3px 8px rgba(255, 255, 255, 0.03) !important;
+  transform: translateY(1px);
+}
+
+
+.perspective-1000 {
+  perspective: 1000px;
 }

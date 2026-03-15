@@ -39,10 +39,11 @@ const LeadTable: React.FC<LeadTableProps> = ({
 
         <Space size={12}>
           <div 
-            className="w-8 h-8 rounded-full bg-[#82C21C]/10 flex items-center justify-center text-[#82C21C] font-bold text-xs"
+            className="w-8 h-8 flex items-center justify-center text-[#82C21C] font-bold text-xs neumorphic-logo"
           >
             {text[0]}
           </div>
+
           <Text strong style={{ color: "#FFFFFF" }}>{text}</Text>
         </Space>
       ),
@@ -93,9 +94,19 @@ const LeadTable: React.FC<LeadTableProps> = ({
             type="text"
             icon={<EditOutlined />}
             onClick={(e) => { e.stopPropagation(); onEdit(record); }}
-            style={{ color: "#82C21C", fontSize: "18px" }}
+            className="neumorphic-button"
+            style={{ 
+              color: "#82C21C", 
+              fontSize: "16px",
+              width: 32,
+              height: 32,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
           />
         </Tooltip>
+
       ),
     },
   ];

@@ -33,13 +33,13 @@ export default function ThemeProvider({
 
   const customTokens = {
     colorBgLayout: "#082220",
-    colorBgContainer: "rgba(17, 28, 24, 0.6)",
-    colorBgElevated: "rgba(25, 38, 34, 0.8)", // Slightly more opaque for elevated surfaces
+    colorBgContainer: "#111C18",
+    colorBgElevated: "#182621",
     colorPrimary: "#82C21C",
     colorTextBase: "#FFFFFF",
-    colorTextSecondary: "#E6F0ED",
-    colorBorder: "rgba(255, 255, 255, 0.08)",
-    colorBorderSecondary: "rgba(255, 255, 255, 0.05)",
+    colorTextSecondary: "#9BA7A3",
+    colorBorder: "#1E2B27",
+    colorBorderSecondary: "#1E2B27",
   };
 
   return (
@@ -61,23 +61,24 @@ export default function ThemeProvider({
             Menu: {
               itemSelectedBg: "rgba(130, 194, 28, 0.2)",
               itemSelectedColor: "#82C21C",
-              itemColor: "#E6F0ED", // Off-white for unselected items
+              itemColor: "#E6F0ED",
               itemHoverBg: "rgba(255, 255, 255, 0.08)",
-              itemHoverColor: "#FFFFFF", // Pure white on hover
+              itemHoverColor: "#FFFFFF",
             },
             Card: {
-              colorBgContainer: "#0E0E0E",
-              colorBorderSecondary: "#1A1A1A",
-              boxShadowTertiary: "0 4px 12px rgba(0, 0, 0, 0.6)",
+              colorBgContainer: "#111C18",
+              colorBorderSecondary: "#1E2B27",
+              boxShadowTertiary: "0 6px 18px rgba(0, 0, 0, 0.35)",
             },
             Table: {
-              headerBg: "#151515",
+              headerBg: "#15221E",
               headerColor: "#E6F0ED",
               rowHoverBg: "rgba(255,255,255,0.02)",
-              borderColor: "#1A1A1A",
+              borderColor: "#1E2B27",
             },
             Drawer: {
-              colorBgElevated: "#0E0E0E",
+              colorBgElevated: "#111C18",
+              colorBorderSecondary: "#1E2B27",
             },
             Button: {
               colorPrimary: "#82C21C",
@@ -90,24 +91,25 @@ export default function ThemeProvider({
             Input: {
               activeBorderColor: "#82C21C",
               hoverBorderColor: "#82C21C",
-              colorBgContainer: "#050505",
+              colorBgContainer: "#0A1412",
               colorText: "#FFFFFF",
-              colorTextPlaceholder: "#9BA7A3",
+              colorTextPlaceholder: "#6A7A75",
             },
             Select: {
               colorPrimary: "#82C21C",
               colorPrimaryHover: "#9EDC2E",
-              colorBgContainer: "#050505",
+              colorBgContainer: "#0A1412",
               colorText: "#FFFFFF",
-              colorTextPlaceholder: "#9BA7A3",
-              colorBgElevated: "#151515",
-              selectorBg: "#050505",
+              colorTextPlaceholder: "#6A7A75",
+              colorBgElevated: "#182621",
+              selectorBg: "#0A1412",
               optionSelectedBg: "rgba(130, 194, 28, 0.2)",
               optionSelectedColor: "#82C21C",
               optionActiveBg: "rgba(255, 255, 255, 0.08)",
             },
           },
         }}
+
 
       >
         {children}

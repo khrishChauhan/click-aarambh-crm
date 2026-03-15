@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+
 
 interface InteractiveCardProps {
   children: React.ReactNode;
@@ -17,14 +19,13 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({ children, className =
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  // Smooth springs for the rotation and translation
-  const mouseXSpring = useSpring(x, { stiffness: 200, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 200, damping: 20 });
+  // Smooth springs for the rotation
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
 
-  // Transforms for rotateX, rotateY based on mouse position
-  // 3D Tilt: rotateX follows Y motion, rotateY follows X motion
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["4deg", "-4deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-4deg", "4deg"]);
+  // Transforms for rotateX, rotateY based on mouse position (-0.5 to 0.5)
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["5deg", "-5deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -56,10 +57,7 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({ children, className =
   };
 
   return (
-    <div 
-      className="perspective-container" 
-      style={{ perspective: "1000px", height: "100%" }}
-    >
+    <div style={{ perspective: "1000px", height: "100%" }}>
       <motion.div
         ref={cardRef}
         onMouseMove={handleMouseMove}
@@ -69,36 +67,29 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({ children, className =
           rotateX: isMobile ? 0 : rotateX,
           rotateY: isMobile ? 0 : rotateY,
           transformStyle: "preserve-3d",
-          background: "rgba(17, 28, 24, 0.6)",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
+          background: "#111C18",
+          border: "1px solid #1E2B27",
         }}
         whileHover={!isMobile ? {
-          y: -6,
-          scale: 1.02,
-          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(130, 194, 28, 0.15)",
+          y: -4,
+          boxShadow: "0 15px 35px rgba(0,0,0,0.5)",
         } : {}}
-        whileTap={{ 
-          y: -4, 
-          scale: 0.98,
-          boxShadow: isMobile ? "0 10px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(130, 194, 28, 0.1)" : ""
-        }}
+        whileTap={{ scale: 0.98 }}
         transition={{
-          type: "spring",
-          stiffness: 200,
-          damping: 18,
+          duration: 0.2,
+          ease: "easeOut"
         }}
-        className={`rounded-2xl p-6 transition-colors shadow-2xl ${className}`}
-
+        className={`rounded-[14px] p-6 shadow-[0_6px_18px_rgba(0,0,0,0.35)] ${className}`}
       >
-        <div style={{ transform: "translateZ(20px)" }}>
+        <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }}>
           {children}
         </div>
       </motion.div>
     </div>
   );
 };
+
+
 
 
 export default InteractiveCard;
