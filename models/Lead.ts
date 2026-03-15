@@ -1,16 +1,43 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-const LeadSchema = new mongoose.Schema({
-  name: String,
-  phone: String,
-  email: String,
-  status: String,
-  nextFollowUp: Date,
-  revenue: Number,
-  notes: String,
-  source: String,
-  campaign: String,
-  city: String
-}, { timestamps: true })
+const LeadSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Please provide a name"],
+    },
+    phone: {
+      type: String,
+      required: [true, "Please provide a phone number"],
+    },
+    email: {
+      type: String,
+    },
+    status: {
+      type: String,
+      default: "New",
+    },
+    source: {
+      type: String,
+    },
+    campaign: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    revenue: {
+      type: Number,
+      default: 0,
+    },
+    notes: {
+      type: String,
+    },
+    nextFollowUp: {
+      type: Date,
+    },
+  },
+  { timestamps: true }
+);
 
-export default mongoose.models.Lead || mongoose.model("Lead", LeadSchema)
+export default mongoose.models.Lead || mongoose.model("Lead", LeadSchema);

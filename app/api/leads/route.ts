@@ -1,16 +1,32 @@
-import { connectDB } from "@/lib/db"
-import Lead from "@/models/Lead"
-import { NextResponse } from "next/server"
+import { connectDB } from "@/lib/db";
+import Lead from "@/models/Lead";
+import { NextResponse } from "next/server";
 
 export async function GET() {
-  await connectDB()
-  const leads = await Lead.find()
-  return NextResponse.json(leads)
+  try {
+    await connectDB();
+    const leads = await Lead.find({}).sort({ createdAt: -1 });
+    return NextResponse.json(leads);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
-  await connectDB()
-  const body = await req.json()
-  const lead = await Lead.create(body)
-  return NextResponse.json(lead)
-}
+  try {
+    await connectDB();
+    const body = await req.json();
+
+    if (!body.name || !body.phone) {
+      return NextResponse.json(
+        { error: "Name and Phone are required" },
+        { status: 400 }
+      );
+    }
+
+    const lead = await Lead.create(body);
+    return NextResponse.json(lead, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

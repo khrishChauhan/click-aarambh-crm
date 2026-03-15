@@ -13,77 +13,73 @@ import {
   Space,
   Typography,
   Card,
+  Modal,
+  message,
+  Popconfirm,
 } from "antd";
 import { useTheme } from "@/components/ThemeProvider";
+import LeadForm from "@/components/LeadForm";
+import axios from "axios";
+import dayjs from "dayjs";
 
 const { Title } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
 
+interface ILead {
+  _id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  status: string;
+  source?: string;
+  city?: string;
+  revenue?: number;
+  notes?: string;
+  campaign?: string;
+  nextFollowUp?: string | Date;
+  createdAt: string;
+}
+
 export default function Leads() {
   const { isDarkMode } = useTheme();
+  const [leads, setLeads] = useState<ILead[]>([]);
+  const [loading, setLoading] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [selectedLead, setSelectedLead] = useState<any>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<ILead | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
     window.addEventListener("resize", handleResize);
+    fetchLeads();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const fetchLeads = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("/api/leads");
+      setLeads(response.data);
+    } catch (error) {
+      console.error("Error fetching leads:", error);
+      message.error("Failed to load leads");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const [form] = Form.useForm();
 
-  const statuses: Record<string, string> = {
+  const statusColors: Record<string, string> = {
     New: "blue",
     Contacted: "orange",
     Interested: "green",
     Lost: "red",
   };
-
-  const dummyData = [
-    {
-      key: "1",
-      name: "John Doe",
-      phone: "+1 234-567-8901",
-      email: "john@example.com",
-      status: "New",
-      source: "Website",
-      city: "New York",
-      createdAt: "2023-10-25",
-    },
-    {
-      key: "2",
-      name: "Jane Smith",
-      phone: "+1 987-654-3210",
-      email: "jane@example.com",
-      status: "Interested",
-      source: "Referral",
-      city: "London",
-      createdAt: "2023-10-24",
-    },
-    {
-      key: "3",
-      name: "Mike Johnson",
-      phone: "+1 555-123-4567",
-      email: "mike@example.com",
-      status: "Contacted",
-      source: "Campaign A",
-      city: "Chicago",
-      createdAt: "2023-10-23",
-    },
-    {
-      key: "4",
-      name: "Emily Davis",
-      phone: "+1 555-987-6543",
-      email: "emily@example.com",
-      status: "Lost",
-      source: "Cold Call",
-      city: "Los Angeles",
-      createdAt: "2023-10-22",
-    },
-  ];
 
   const columns = [
     {
@@ -111,7 +107,7 @@ export default function Leads() {
       key: "status",
       dataIndex: "status",
       render: (status: string) => (
-        <Tag color={statuses[status] || "default"}>{status.toUpperCase()}</Tag>
+        <Tag color={statusColors[status] || "default"}>{(status || "New").toUpperCase()}</Tag>
       ),
     },
     {
@@ -128,12 +124,14 @@ export default function Leads() {
       title: "Created Date",
       dataIndex: "createdAt",
       key: "createdAt",
+      render: (date: string) => (date ? dayjs(date).format("YYYY-MM-DD") : "-"),
     },
     {
       title: "Actions",
       key: "action",
-      render: (_: any, record: any) => (
+      render: (_: unknown, record: ILead) => (
         <Space size="middle">
+
           <Button
             type="primary"
             size="small"
@@ -150,20 +148,48 @@ export default function Leads() {
     },
   ];
 
-  const openDrawer = (record: any) => {
+  const openDrawer = (record: ILead) => {
     setSelectedLead(record);
     form.setFieldsValue({
       ...record,
-      salesAssigned: "Admin User",
-      revenue: "$0.00",
+      nextFollowUp: record.nextFollowUp ? dayjs(record.nextFollowUp) : null,
     });
     setDrawerVisible(true);
   };
+
 
   const closeDrawer = () => {
     setDrawerVisible(false);
     setSelectedLead(null);
   };
+
+  const handleUpdate = async () => {
+    if (!selectedLead) return;
+    try {
+      const values = await form.validateFields();
+      await axios.patch(`/api/leads/${selectedLead._id}`, values);
+      message.success("Lead updated successfully!");
+      closeDrawer();
+      fetchLeads();
+    } catch (error) {
+      console.error("Update error:", error);
+      message.error("Failed to update lead");
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedLead) return;
+    try {
+      await axios.delete(`/api/leads/${selectedLead._id}`);
+      message.success("Lead deleted successfully!");
+      closeDrawer();
+      fetchLeads();
+    } catch (error) {
+      console.error("Delete error:", error);
+      message.error("Failed to delete lead");
+    }
+  };
+
 
   return (
     <div className="max-w-7xl mx-auto w-full">
@@ -173,6 +199,7 @@ export default function Leads() {
         </Title>
         <Button
           type="primary"
+          onClick={() => setModalVisible(true)}
           style={{ backgroundColor: "#82C21C", borderColor: "#82C21C", height: 40, padding: '0 24px', fontWeight: 600, borderRadius: 8 }}
         >
           Add New Lead
@@ -190,7 +217,9 @@ export default function Leads() {
       >
         <Table
           columns={columns}
-          dataSource={dummyData}
+          dataSource={leads}
+          rowKey="_id"
+          loading={loading}
           onRow={(record) => {
             return {
               onClick: () => {
@@ -204,6 +233,22 @@ export default function Leads() {
           className="custom-table"
         />
       </Card>
+
+      <Modal
+        title="Add New Lead"
+        open={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        footer={null}
+        destroyOnClose
+      >
+        <LeadForm 
+          onSuccess={() => {
+            setModalVisible(false);
+            fetchLeads();
+          }} 
+          onCancel={() => setModalVisible(false)} 
+        />
+      </Modal>
 
       <Drawer
         title={<span style={{ fontSize: 20 }}>Lead Details</span>}
@@ -220,12 +265,12 @@ export default function Leads() {
       >
         {selectedLead && (
           <Form form={form} layout="vertical" className="space-y-4">
-            <Form.Item label="Name" name="name">
+            <Form.Item label="Name" name="name" rules={[{ required: true }]}>
               <Input size="large" />
             </Form.Item>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Form.Item label="Phone" name="phone" className="m-0">
+              <Form.Item label="Phone" name="phone" className="m-0" rules={[{ required: true }]}>
                 <Input size="large" />
               </Form.Item>
               <Form.Item label="Email" name="email" className="m-0">
@@ -242,14 +287,19 @@ export default function Leads() {
                   <Option value="Lost">Lost</Option>
                 </Select>
               </Form.Item>
-              <Form.Item label="Sales Assigned" name="salesAssigned" className="m-0">
-                <Input size="large" />
+              <Form.Item label="Revenue Potential" name="revenue" className="m-0">
+                <Input size="large" type="number" />
               </Form.Item>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Form.Item label="Source" name="source" className="m-0">
-                <Input size="large" />
+                <Select size="large">
+                  <Option value="Meta Ads">Meta Ads</Option>
+                  <Option value="Google Ads">Google Ads</Option>
+                  <Option value="Direct">Direct</Option>
+                  <Option value="Referral">Referral</Option>
+                </Select>
               </Form.Item>
               <Form.Item label="City" name="city" className="m-0">
                 <Input size="large" />
@@ -260,14 +310,10 @@ export default function Leads() {
               <Form.Item label="Next Follow-up" name="nextFollowUp" className="m-0">
                 <DatePicker size="large" style={{ width: "100%" }} />
               </Form.Item>
-              <Form.Item label="Revenue Potential" name="revenue" className="m-0">
+              <Form.Item label="Campaign" name="campaign" className="m-0">
                 <Input size="large" />
               </Form.Item>
             </div>
-            
-            <Form.Item label="Campaign" name="campaign">
-              <Input size="large" />
-            </Form.Item>
 
             <Form.Item label="Notes" name="notes">
               <TextArea rows={4} size="large" placeholder="Add lead specific notes here..." />
@@ -292,11 +338,16 @@ export default function Leads() {
           }}
           className="z-10"
         >
-          <Button size="large" danger style={{ flex: isMobile ? "1 1 45%" : "none" }}>Delete</Button>
-          <Button size="large" style={{ flex: isMobile ? "1 1 45%" : "none", color: "#82C21C", borderColor: "#82C21C" }}>
-            Mark Converted
-          </Button>
-          <Button size="large" type="primary" onClick={closeDrawer} style={{ backgroundColor: "#82C21C", borderColor: "#82C21C", flex: isMobile ? "1 1 100%" : "none" }}>
+          <Popconfirm
+            title="Are you sure you want to delete this lead?"
+            onConfirm={handleDelete}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button size="large" danger style={{ flex: isMobile ? "1 1 45%" : "none" }}>Delete</Button>
+          </Popconfirm>
+          
+          <Button size="large" type="primary" onClick={handleUpdate} style={{ backgroundColor: "#82C21C", borderColor: "#82C21C", flex: isMobile ? "1 1 100%" : "none" }}>
             Save Changes
           </Button>
         </div>
