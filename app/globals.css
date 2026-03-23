@@ -61,3 +61,29 @@ body {
 .perspective-1000 {
   perspective: 1000px;
 }
+
+/* Professional Input Styles */
+.professional-input {
+  transition: all 0.3s ease !important;
+}
+
+.professional-input:hover {
+  border-color: rgba(130, 194, 28, 0.3) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.professional-input:focus, .professional-input-focused {
+  border-color: #82C21C !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 0 0 2px rgba(130, 194, 28, 0.1) !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
