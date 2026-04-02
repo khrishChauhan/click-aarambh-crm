@@ -17,7 +17,7 @@ const recentLeads = [
 
 const RecentLeads: React.FC = () => {
   return (
-    <SectionCard title="Recent Leads Activity">
+    <SectionCard title="Recent Leads Activity" disableHover3D>
       <List
         dataSource={recentLeads}
         renderItem={(item) => (

@@ -9,9 +9,15 @@ interface InteractiveCardProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  disableHover3D?: boolean;
 }
 
-const InteractiveCard: React.FC<InteractiveCardProps> = ({ children, className = "", style }) => {
+const InteractiveCard: React.FC<InteractiveCardProps> = ({ 
+  children, 
+  className = "", 
+  style,
+  disableHover3D = false
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -37,7 +43,7 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({ children, className =
   }, []);
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current || isMobile) return;
+    if (!cardRef.current || isMobile || disableHover3D) return;
 
     const rect = cardRef.current.getBoundingClientRect();
     const width = rect.width;
@@ -64,13 +70,13 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({ children, className =
         onMouseLeave={handleMouseLeave}
         style={{
           ...style,
-          rotateX: isMobile ? 0 : rotateX,
-          rotateY: isMobile ? 0 : rotateY,
+          rotateX: (isMobile || disableHover3D) ? 0 : rotateX,
+          rotateY: (isMobile || disableHover3D) ? 0 : rotateY,
           transformStyle: "preserve-3d",
           background: "#111C18",
           border: "1px solid #1E2B27",
         }}
-        whileHover={!isMobile ? {
+        whileHover={(!isMobile && !disableHover3D) ? {
           y: -4,
           boxShadow: "0 15px 35px rgba(0,0,0,0.5)",
         } : {}}
@@ -81,7 +87,7 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({ children, className =
         }}
         className={`rounded-[14px] p-6 shadow-[0_6px_18px_rgba(0,0,0,0.35)] ${className}`}
       >
-        <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }}>
+        <div style={{ transform: (isMobile || disableHover3D) ? "none" : "translateZ(30px)", transformStyle: "preserve-3d" }}>
           {children}
         </div>
       </motion.div>

@@ -85,7 +85,7 @@ export default function LeadsPage() {
 
       }
     >
-      <SectionCard className="p-0">
+      <SectionCard className="p-0" disableHover3D>
         <LeadTable 
           data={leads} 
           loading={loading} 

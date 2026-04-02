@@ -9,11 +9,18 @@ interface SectionCardProps {
   title?: React.ReactNode;
   extra?: React.ReactNode;
   className?: string;
+  disableHover3D?: boolean;
 }
 
-const SectionCard: React.FC<SectionCardProps> = ({ children, title, extra, className }) => {
+const SectionCard: React.FC<SectionCardProps> = ({ 
+  children, 
+  title, 
+  extra, 
+  className,
+  disableHover3D = false
+}) => {
   return (
-    <InteractiveCard className={className}>
+    <InteractiveCard className={className} disableHover3D={disableHover3D}>
       {(title || extra) && (
         <div 
           className="flex justify-between items-center mb-6 pb-4"
