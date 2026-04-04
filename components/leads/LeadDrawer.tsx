@@ -70,18 +70,35 @@ const LeadDrawer: React.FC<LeadDrawerProps> = ({
                   type="text" 
                   danger 
                   icon={<DeleteOutlined />} 
-                  className="neumorphic-button"
-                  style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center" }}
+                  style={{ 
+                    width: 32, 
+                    height: 32, 
+                    display: "flex", 
+                    alignItems: "center", 
+                    justifyContent: "center",
+                    background: "rgba(255, 77, 79, 0.05)",
+                    border: "1px solid rgba(255, 77, 79, 0.1)",
+                    borderRadius: "6px"
+                  }}
                 />
               </Popconfirm>
            )}
-           <Button 
-            type="text" 
-            icon={<CloseOutlined />} 
-            onClick={onClose} 
-            className="neumorphic-button"
-            style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", color: "#E6F0ED" }}
-          />
+            <Button 
+              type="text" 
+              icon={<CloseOutlined />} 
+              onClick={onClose} 
+              style={{ 
+                width: 32, 
+                height: 32, 
+                display: "flex", 
+                alignItems: "center", 
+                justifyContent: "center", 
+                color: "#E6F0ED",
+                background: "rgba(255, 255, 255, 0.05)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "6px"
+              }}
+            />
 
 
         </Space>

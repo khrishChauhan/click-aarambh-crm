@@ -37,14 +37,18 @@ const LeadTable: React.FC<LeadTableProps> = ({
       key: "name",
       render: (text: string) => ( // Removed record: ILead as it's not used
 
-        <Space size={12}>
+        <Space size={10}>
           <div 
-            className="w-8 h-8 flex items-center justify-center text-[#82C21C] font-bold text-xs neumorphic-logo"
+            className="w-7 h-7 flex items-center justify-center text-[#82C21C] font-semibold text-xs rounded-lg"
+            style={{ 
+              background: "rgba(130, 194, 28, 0.1)",
+              border: "1px solid rgba(130, 194, 28, 0.2)"
+            }}
           >
             {text[0]}
           </div>
 
-          <Text strong style={{ color: "#FFFFFF" }}>{text}</Text>
+          <Text style={{ color: "#FFFFFF", fontWeight: 500 }}>{text}</Text>
         </Space>
       ),
     },
@@ -94,15 +98,17 @@ const LeadTable: React.FC<LeadTableProps> = ({
             type="text"
             icon={<EditOutlined />}
             onClick={(e) => { e.stopPropagation(); onEdit(record); }}
-            className="neumorphic-button"
             style={{ 
               color: "#82C21C", 
-              fontSize: "16px",
-              width: 32,
-              height: 32,
+              fontSize: "14px",
+              width: 28,
+              height: 28,
               display: "flex",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
+              background: "rgba(255, 255, 255, 0.03)",
+              border: "1px solid rgba(255, 255, 255, 0.05)",
+              borderRadius: "6px"
             }}
           />
         </Tooltip>
@@ -140,12 +146,13 @@ const Tag = ({ children, style }: TagProps) => {
   return (
     <span 
       style={{
-        padding: "2px 10px",
-        borderRadius: "10px",
-        fontSize: "12px",
-        background: "rgba(130, 194, 28, 0.15)",
+        padding: "1px 8px",
+        borderRadius: "6px",
+        fontSize: "11px",
+        background: "rgba(130, 194, 28, 0.08)",
         color: "#82C21C",
-        fontWeight: 600,
+        fontWeight: 500,
+        border: "1px solid rgba(130, 194, 28, 0.1)",
         ...style
       }}
     >

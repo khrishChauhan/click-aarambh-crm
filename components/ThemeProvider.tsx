@@ -48,7 +48,7 @@ export default function ThemeProvider({
         theme={{
           algorithm: theme.darkAlgorithm,
           token: {
-            fontFamily: "var(--font-inter), sans-serif",
+            fontFamily: "var(--font-plus-jakarta-sans), var(--font-inter), sans-serif",
             ...customTokens,
           },
           components: {

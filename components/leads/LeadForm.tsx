@@ -134,18 +134,17 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess, onCancel, initialValues,
         className="flex justify-end gap-3 mt-4 pt-6"
         style={{ borderTop: "1px solid #1E2B27" }}
       >
-        <Button onClick={onCancel} size="large" className="neumorphic-button" style={{ height: 48, width: 120 }}>
+        <Button onClick={onCancel} className="rounded-lg px-8 font-medium" style={{ height: 42 }}>
           Cancel
         </Button>
         <Button 
           type="primary" 
           htmlType="submit" 
           loading={loading} 
-          size="large"
-          className="neumorphic-button-accent"
-          style={{ height: 48, minWidth: 120 }}
+          className="rounded-lg px-8 font-medium"
+          style={{ height: 42, minWidth: 120 }}
         >
-          {isEdit ? "Update Lead" : "Add Lead"}
+          {isEdit ? "Update Lead" : "Create Lead"}
         </Button>
       </div>
 

@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import ThemeProvider from "@/components/ThemeProvider";
 import AppLayout from "@/components/AppLayout";
@@ -6,6 +6,11 @@ import "./globals.css";
 
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const plusJakartaSans = Plus_Jakarta_Sans({ 
+  subsets: ["latin"], 
+  variable: "--font-plus-jakarta-sans",
+  weight: ['200', '300', '400', '500', '600', '700', '800']
+});
 
 export const metadata = {
   title: "Click Aarambh CRM",
@@ -21,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className} style={{ margin: 0, padding: 0 }}>
+      <body className={`${plusJakartaSans.variable} ${inter.variable} font-sans`} style={{ margin: 0, padding: 0 }}>
         <AntdRegistry>
           <ThemeProvider>
             <CursorGlow />

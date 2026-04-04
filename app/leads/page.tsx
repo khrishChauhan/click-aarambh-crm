@@ -70,19 +70,19 @@ export default function LeadsPage() {
 
   return (
     <PageContainer 
-      title="Leads Management" 
-      description="Manage and track your leads efficiently with our CRM tools."
+      title="Leads" 
+      description="Manage and track your lead pipeline."
+      minimal={true}
       extra={
         <Button 
           type="primary" 
           icon={<PlusOutlined />} 
           onClick={() => setModalVisible(true)}
-          size="large"
-          className="neumorphic-button-accent"
+          className="rounded-lg px-6 font-medium"
+          style={{ height: '40px' }}
         >
           Add New Lead
         </Button>
-
       }
     >
       <SectionCard className="p-0" disableHover3D>
