@@ -74,7 +74,7 @@ const SourceDonutChart: React.FC = () => {
   };
 
   return (
-    <SectionCard title="Leads by Source">
+    <SectionCard title="Leads by Source" disableHover3D>
       <div style={{ height: 350 }}>
         <Pie {...config} />
       </div>

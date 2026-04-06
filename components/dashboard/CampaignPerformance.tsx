@@ -15,7 +15,7 @@ const campaignData = [
 
 const CampaignPerformance: React.FC = () => {
   return (
-    <SectionCard title="Campaign Performance">
+    <SectionCard title="Campaign Performance" disableHover3D>
       <List
         dataSource={campaignData}
         renderItem={(item) => (

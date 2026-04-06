@@ -93,6 +93,7 @@ const LeadTrendChart: React.FC = () => {
   return (
     <SectionCard
       title="Lead Generation Trend"
+      disableHover3D
       extra={
         <Select defaultValue="7days" size="small" variant="borderless" style={{ width: 120 }}>
           <Select.Option value="7days">Last 7 days</Select.Option>
