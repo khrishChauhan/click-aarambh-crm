@@ -72,7 +72,6 @@ export default function LeadsPage() {
     <PageContainer 
       title="Leads" 
       description="Manage and track your lead pipeline."
-      minimal={true}
       extra={
         <Button 
           type="primary" 
