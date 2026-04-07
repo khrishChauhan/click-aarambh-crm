@@ -5,6 +5,7 @@ import { Form, Input, Button, Typography, message } from "antd";
 import { UserOutlined, LockOutlined, ChromeOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/auth";
+import { authenticate } from "@/app/actions/auth";
 import { motion } from "framer-motion";
 
 const { Title, Text } = Typography;
@@ -13,19 +14,22 @@ const LoginForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
     setLoading(true);
-    setTimeout(() => {
-      // For demo purposes:
-      if (values.username === "admin" && values.password === "123456") {
+    try {
+      const res = await authenticate(values.email, values.password);
+      if (res.success) {
         login();
         message.success("Login successful! Redirecting...");
         router.push("/dashboard");
       } else {
-        message.error("Invalid username or password");
+        message.error(res.error || "Invalid email or password");
         setLoading(false);
       }
-    }, 1200);
+    } catch (err) {
+      message.error("Failed to authenticate. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
