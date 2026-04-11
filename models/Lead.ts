@@ -36,6 +36,21 @@ const LeadSchema = new mongoose.Schema(
     nextFollowUp: {
       type: Date,
     },
+    telegramId: {
+      type: String,
+      sparse: true,
+      unique: true,
+    },
+    telegramUsername: {
+      type: String,
+    },
+    telegramHistory: [
+      {
+        role: { type: String, enum: ["user", "bot", "assistant"] },
+        content: { type: String },
+        timestamp: { type: Date, default: Date.now },
+      }
+    ],
   },
   { timestamps: true }
 );
