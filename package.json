@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "bot:dev": "tsx --env-file=.env bot.ts"
+    "bot:dev": "tsx --env-file=.env bot.ts",
+    "bot:start": "tsx bot.ts"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
@@ -23,6 +24,7 @@
     "next": "16.1.6",
     "next-themes": "^0.4.6",
     "node-telegram-bot-api": "^0.67.0",
+    "openai": "^6.34.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-type-animation": "^3.2.0",
