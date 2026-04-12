@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { LayoutDashboard, Users } from "lucide-react"
+import { LayoutDashboard, Users, CalendarDays } from "lucide-react"
 
 export default function Sidebar() {
   return (
@@ -32,6 +32,14 @@ export default function Sidebar() {
           >
             <Users size={18} />
             Leads
+          </Link>
+
+          <Link
+            href="/meetings"
+            className="flex items-center gap-3 hover:text-white transition"
+          >
+            <CalendarDays size={18} />
+            Meetings
           </Link>
 
         </nav>

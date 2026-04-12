@@ -51,6 +51,16 @@ const LeadSchema = new mongoose.Schema(
         timestamp: { type: Date, default: Date.now },
       }
     ],
+    // New fields for AI Booking Flow
+    bookingStatus: { 
+      type: String, 
+      enum: ["idle", "awaiting_date", "awaiting_time"], 
+      default: "idle" 
+    },
+    meetingScheduled: { type: Boolean, default: false },
+    meetingDate: { type: Date },
+    meetingTime: { type: String },
+    chatSummary: { type: String },
   },
   { timestamps: true }
 );

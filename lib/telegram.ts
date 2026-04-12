@@ -1,7 +1,13 @@
 import TelegramBot from "node-telegram-bot-api";
 import { connectDB } from "./db";
 import Lead from "../models/Lead";
-import { generateAIResponse, type HistoryMessage } from "./ai";
+import { 
+  generateAIResponse, 
+  checkBookingIntent, 
+  generateChatSummary, 
+  normalizeDate,
+  type HistoryMessage 
+} from "./ai";
 
 // ─── Bot instance ─────────────────────────────────────────────────────────────
 
@@ -29,7 +35,6 @@ if (bot) {
       let lead = await Lead.findOne({ telegramId: String(chatId) });
 
       if (!lead) {
-        console.log(`[Telegram] New user: ${username} (${chatId})`);
         lead = new Lead({
           name: firstName,
           phone: "Pending via Telegram",
@@ -38,10 +43,12 @@ if (bot) {
           telegramId: String(chatId),
           telegramUsername: username,
           telegramHistory: [],
+          bookingStatus: "idle",
         });
       }
 
-      const isFirstMessage = lead.telegramHistory.length === 0;
+      // Ensure bookingStatus is initialized
+      if (!lead.bookingStatus) lead.bookingStatus = "idle";
 
       // ── 2. Persist user message ────────────────────────────────────────────
       const userEntry: HistoryMessage = {
@@ -50,68 +57,91 @@ if (bot) {
         timestamp: new Date(),
       };
       lead.telegramHistory.push(userEntry);
-      await lead.save();
+      // Wait to save until end of processing to minimize DB writes
 
-      // ── 3. Welcome message on first contact / /start ───────────────────────
+      // ── 3. Handle first message logic ──────────────────────────────────────
+      const isFirstMessage = lead.telegramHistory.length === 1;
       if (text === "/start" || isFirstMessage) {
-        const welcomeMessage =
-          `Hey ${firstName} 👋 Thanks for reaching out to ClickRM!\n\n` +
-          `I'm your sales assistant. Tell me what you're looking for — ` +
-          `I'd love to help you discover how ClickRM can grow your business. 🚀`;
-
+        const welcomeMessage = `Hey ${firstName} 👋 Welcome to ClickRM! I'm your sales assistant. How can I help you grow your business today?`;
         await bot.sendMessage(chatId, welcomeMessage);
-
-        lead.telegramHistory.push({
-          role: "assistant",
-          content: welcomeMessage,
-          timestamp: new Date(),
-        });
+        lead.telegramHistory.push({ role: "assistant", content: welcomeMessage, timestamp: new Date() });
+        lead.bookingStatus = "idle";
         await lead.save();
         return;
       }
 
-      // ── 4. Build context & call Grok AI ───────────────────────────────────
-      // Pass the history *before* the current message for context (exclude the
-      // just-pushed user entry so it doesn't appear twice inside generateAIResponse)
-      const historyForContext: HistoryMessage[] = lead.telegramHistory
-        .slice(0, -1) // everything except the just-added user message
-        .map((h: { role: string; content: string; timestamp: Date }) => ({
-          role: h.role as "user" | "bot" | "assistant",
-          content: h.content,
-          timestamp: h.timestamp,
-        }));
+      // ── 4. Booking Flow State Machine ──────────────────────────────────────
 
-      const aiReply = await generateAIResponse(text, historyForContext);
-
-      // ── 5. Send reply ──────────────────────────────────────────────────────
-      await bot.sendMessage(chatId, aiReply);
-
-      // ── 6. Persist assistant reply ─────────────────────────────────────────
-      const assistantEntry: HistoryMessage = {
-        role: "assistant",
-        content: aiReply,
-        timestamp: new Date(),
-      };
-      lead.telegramHistory.push(assistantEntry);
-      await lead.save();
-
-      console.log(`[Telegram] ${username}: "${text}" → AI replied ✅`);
-    } catch (error) {
-      console.error("[Telegram] Error handling message:", error);
-      try {
-        await bot.sendMessage(
-          chatId,
-          "Sorry, I encountered an error processing your message. Please try again."
-        );
-      } catch {
-        // Silently ignore if we can't even send the error message
+      // STATE: AWAITING DATE
+      if (lead.bookingStatus === "awaiting_date") {
+        const dateObj = await normalizeDate(text);
+        if (!dateObj) {
+          const retryMsg = "I couldn't quite catch that date. Could you tell me what day works for you? (e.g., 'This Friday' or 'Nov 20th')";
+          await bot.sendMessage(chatId, retryMsg);
+          lead.telegramHistory.push({ role: "assistant", content: retryMsg, timestamp: new Date() });
+          await lead.save();
+          return;
+        }
+        
+        lead.meetingDate = dateObj;
+        lead.bookingStatus = "awaiting_time";
+        const timeMsg = `Got it, ${dateObj.toLocaleDateString()}! What time would you prefer?`;
+        await bot.sendMessage(chatId, timeMsg);
+        lead.telegramHistory.push({ role: "assistant", content: timeMsg, timestamp: new Date() });
+        await lead.save();
+        return;
       }
+
+      // STATE: AWAITING TIME
+      if (lead.bookingStatus === "awaiting_time") {
+        lead.meetingTime = text;
+        lead.meetingScheduled = true;
+        lead.bookingStatus = "idle"; // Reset flow
+        lead.status = "Meeting Booked";
+        
+        // Generate automatic summary for CRM
+        const summary = await generateChatSummary(lead.telegramHistory);
+        lead.chatSummary = summary;
+
+        const confirmMsg = `Great! Your meeting is scheduled for ${lead.meetingDate?.toLocaleDateString()} at ${lead.meetingTime}. Our team will reach out to you shortly. 🚀`;
+        await bot.sendMessage(chatId, confirmMsg);
+        lead.telegramHistory.push({ role: "assistant", content: confirmMsg, timestamp: new Date() });
+        await lead.save();
+        console.log(`[Booking] Confirmed for ${username}: ${lead.meetingDate} @ ${lead.meetingTime}`);
+        return;
+      }
+
+      // STATE: IDLE (Check for Intent)
+      if (lead.bookingStatus === "idle") {
+        const hasIntent = await checkBookingIntent(text);
+        
+        if (hasIntent) {
+          lead.bookingStatus = "awaiting_date";
+          const bookingStartMsg = "I'd be happy to set that up! What date works best for you?";
+          await bot.sendMessage(chatId, bookingStartMsg);
+          lead.telegramHistory.push({ role: "assistant", content: bookingStartMsg, timestamp: new Date() });
+          await lead.save();
+          return;
+        }
+
+        // Standard AI Response
+        const historyForContext: HistoryMessage[] = lead.telegramHistory
+          .slice(0, -1)
+          .map((h: any) => ({ role: h.role, content: h.content, timestamp: h.timestamp }));
+
+        const aiReply = await generateAIResponse(text, historyForContext);
+        await bot.sendMessage(chatId, aiReply);
+        lead.telegramHistory.push({ role: "assistant", content: aiReply, timestamp: new Date() });
+        await lead.save();
+      }
+
+    } catch (error) {
+      console.error("[Telegram] Error:", error);
+      bot.sendMessage(chatId, "Sorry, I had a bit of a glitch. Could you try that again?").catch(() => {});
     }
   });
 
-  bot.on("polling_error", (error) => {
-    console.error("[Telegram] Polling error:", error);
-  });
+  bot.on("polling_error", (err) => console.error("[Telegram] Polling error:", err));
 } else {
-  console.warn("⚠️  TELEGRAM_BOT_TOKEN is not set. Bot is not initialized.");
+  console.warn("⚠️  TELEGRAM_BOT_TOKEN is not set.");
 }
