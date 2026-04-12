@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "bot:dev": "tsx --env-file=.env bot.ts",
+    "bot:dev": "tsx bot.ts",
     "bot:start": "tsx bot.ts"
   },
   "dependencies": {
