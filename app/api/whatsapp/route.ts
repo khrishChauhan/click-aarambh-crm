@@ -21,6 +21,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log('WhatsApp Webhook Received:', JSON.stringify(body, null, 2));
     
     // Check if it's a WhatsApp status update or message
     if (body.object === 'whatsapp_business_account') {
@@ -30,6 +31,8 @@ export async function POST(request: Request) {
             const message = change.value.messages[0];
             const senderPhone = message.from;
             const text = message.text?.body;
+
+            console.log(`Received message from ${senderPhone}: ${text}`);
 
             if (text && senderPhone) {
               await processWhatsAppMessage(senderPhone, text);
@@ -52,41 +55,53 @@ async function sendWhatsAppMessage(to: string, body: string) {
   const phoneNumberId = process.env.PHONE_NUMBER_ID;
 
   if (!token || !phoneNumberId) {
-    console.error('Missing WhatsApp env variables');
+    console.error('CRITICAL: Missing WhatsApp env variables (WHATSAPP_TOKEN or PHONE_NUMBER_ID)');
     return;
   }
 
+  console.log(`Sending WhatsApp message to ${to}...`);
+
   const url = `https://graph.facebook.com/v19.0/${phoneNumberId}/messages`;
   
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      messaging_product: 'whatsapp',
-      to: to,
-      text: { body: body },
-    }),
-  });
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        to: to,
+        text: { body: body },
+      }),
+    });
 
-  if (!response.ok) {
     const data = await response.json();
-    console.error('Failed to send WhatsApp message:', data);
+
+    if (!response.ok) {
+      console.error('WhatsApp API Error:', JSON.stringify(data, null, 2));
+    } else {
+      console.log('WhatsApp message sent successfully:', data.messages?.[0]?.id);
+    }
+  } catch (err) {
+    console.error('Fetch error while sending WhatsApp message:', err);
   }
 }
 
 async function processWhatsAppMessage(senderPhone: string, text: string) {
   try {
+    console.log('Connecting to DB...');
     await connectDB();
     
     // Fallback find by phone or create new
+    console.log(`Searching for lead with whatsappId: ${senderPhone}`);
     let lead = await Lead.findOne({ whatsappId: senderPhone });
     
     if (!lead) {
+      console.log('Lead not found, creating new lead...');
       lead = new Lead({
-        name: "WhatsApp Lead", // The name submitted in form could be merged if we matched by form phone
+        name: "WhatsApp Lead",
         phone: senderPhone,
         source: "WhatsApp Bot",
         status: "New",
@@ -108,15 +123,18 @@ async function processWhatsAppMessage(senderPhone: string, text: string) {
 
     const isFirstMessage = lead.whatsappHistory.length === 1;
     if (isFirstMessage) {
+      console.log('First message from user, sending welcome...');
       const welcomeMessage = `Hey there 👋 Welcome to ClickRM! I'm your sales assistant. How can I help you grow your business today?`;
       await sendWhatsAppMessage(senderPhone, welcomeMessage);
       lead.whatsappHistory.push({ role: 'assistant', content: welcomeMessage, timestamp: new Date() });
       await lead.save();
+      console.log('Lead saved with welcome message.');
       return;
     }
 
     // STATE: AWAITING DATE
     if (lead.bookingStatus === "awaiting_date") {
+      console.log('Lead is in awaiting_date state...');
       const dateObj = await normalizeDate(text);
       if (!dateObj) {
         const retryMsg = "I couldn't quite catch that date. Could you tell me what day works for you? (e.g., 'This Friday' or 'Nov 20th')";
@@ -137,6 +155,7 @@ async function processWhatsAppMessage(senderPhone: string, text: string) {
 
     // STATE: AWAITING TIME
     if (lead.bookingStatus === "awaiting_time") {
+      console.log('Lead is in awaiting_time state...');
       lead.meetingTime = text;
       lead.meetingScheduled = true;
       lead.bookingStatus = "idle";
@@ -155,9 +174,11 @@ async function processWhatsAppMessage(senderPhone: string, text: string) {
 
     // STATE: IDLE
     if (lead.bookingStatus === "idle") {
+      console.log('Checking for booking intent...');
       const hasIntent = await checkBookingIntent(text);
 
       if (hasIntent) {
+        console.log('Booking intent detected!');
         lead.bookingStatus = "awaiting_date";
         const bookingStartMsg = "I'd be happy to set that up! What date works best for you?";
         await sendWhatsAppMessage(senderPhone, bookingStartMsg);
@@ -167,14 +188,17 @@ async function processWhatsAppMessage(senderPhone: string, text: string) {
       }
 
       // Standard AI Response
+      console.log('Generating AI response...');
       const historyForContext: HistoryMessage[] = lead.whatsappHistory
         .slice(0, -1)
         .map((h: any) => ({ role: h.role, content: h.content, timestamp: h.timestamp }));
 
       const aiReply = await generateAIResponse(text, historyForContext);
+      console.log(`Generated AI Reply: ${aiReply}`);
       await sendWhatsAppMessage(senderPhone, aiReply);
       lead.whatsappHistory.push({ role: "assistant", content: aiReply, timestamp: new Date() });
       await lead.save();
+      console.log('Lead saved after AI response.');
     }
   } catch (error) {
     console.error('Error processing WhatsApp message:', error);
