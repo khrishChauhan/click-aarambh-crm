@@ -21,7 +21,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const isLoginPage = pathname === "/login";
+  const publicRoutes = ["/login", "/privacy-policy", "/terms-of-service", "/data-deletion"];
+  const isPublicPage = publicRoutes.includes(pathname);
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,20 +32,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     window.addEventListener("resize", handleResize);
     
     // Auth check
-    if (!isLoginPage && !isLoggedIn()) {
+    if (!isPublicPage && !isLoggedIn()) {
       router.push("/login");
     } else {
       setIsAuthChecking(false);
     }
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [isLoginPage, router]);
+  }, [isPublicPage, router]);
 
-  if (isAuthChecking && !isLoginPage) {
+  if (isAuthChecking && !isPublicPage) {
     return <div style={{ height: "100vh", background: "#082220" }} />;
   }
 
-  if (isLoginPage) {
+  if (isPublicPage) {
     return <>{children}</>;
   }
 
