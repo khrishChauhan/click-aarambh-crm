@@ -48,22 +48,7 @@ const LeadSchema = new mongoose.Schema(
         timestamp: { type: Date, default: Date.now },
       }
     ],
-    telegramId: {
-      type: String,
-      sparse: true,
-      unique: true,
-    },
-    telegramUsername: {
-      type: String,
-    },
-    telegramHistory: [
-      {
-        role: { type: String, enum: ["user", "bot", "assistant"] },
-        content: { type: String },
-        timestamp: { type: Date, default: Date.now },
-      }
-    ],
-    // New fields for AI Booking Flow
+    // Fields for AI Booking Flow
     bookingStatus: { 
       type: String, 
       enum: ["idle", "awaiting_date", "awaiting_time"], 
