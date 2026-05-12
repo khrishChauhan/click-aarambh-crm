@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Button, Modal, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { useSearchParams, useRouter } from "next/navigation";
 import axios from "axios";
 
 import PageContainer from "@/components/common/PageContainer";
@@ -17,6 +18,9 @@ export default function LeadsPage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedLead, setSelectedLead] = useState<any>(null);
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -34,6 +38,20 @@ export default function LeadsPage() {
   useEffect(() => {
     fetchLeads();
   }, [fetchLeads]);
+
+  // Auto-open drawer when navigated with ?id= param (e.g. from Meetings page)
+  useEffect(() => {
+    const targetId = searchParams.get("id");
+    if (targetId && leads.length > 0 && !drawerVisible) {
+      const matchedLead = leads.find((l: any) => l._id === targetId);
+      if (matchedLead) {
+        setSelectedLead(matchedLead);
+        setDrawerVisible(true);
+        // Clean the URL so refreshing doesn't re-open the drawer
+        router.replace("/leads", { scroll: false });
+      }
+    }
+  }, [searchParams, leads, drawerVisible, router]);
 
   const handleCreateSuccess = () => {
     setModalVisible(false);

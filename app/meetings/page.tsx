@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { message, Spin, Empty, Tag } from "antd";
+import { message, Spin, Empty } from "antd";
+import { useRouter } from "next/navigation";
 import { Calendar, Clock, User, MessageSquare, Phone } from "lucide-react";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -10,6 +11,7 @@ import PageContainer from "@/components/common/PageContainer";
 import SectionCard from "@/components/common/SectionCard";
 
 export default function MeetingsPage() {
+  const router = useRouter();
   const [meetings, setMeetings] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -92,7 +94,7 @@ export default function MeetingsPage() {
                 <StatusTag status={meeting.status} />
                 <button 
                   className="text-emerald-500 text-xs font-bold hover:text-emerald-400 transition-colors cursor-pointer"
-                  onClick={() => message.info("Opening detailed lead view...")}
+                  onClick={() => router.push(`/leads?id=${meeting._id}`)}
                 >
                   VIEW PROFILE →
                 </button>
