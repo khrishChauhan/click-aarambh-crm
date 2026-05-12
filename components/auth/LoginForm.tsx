@@ -99,10 +99,10 @@ const LoginForm: React.FC = () => {
         router.push("/dashboard");
       } else {
         message.error(res.error || "Invalid credentials");
-        setLoading(false);
       }
     } catch (err) {
       message.error("Authentication failed");
+    } finally {
       setLoading(false);
     }
   };
