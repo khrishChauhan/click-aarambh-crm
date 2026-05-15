@@ -51,6 +51,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <Layout style={{ minHeight: "100vh", background: "#082220", position: "relative" }}>
+      {/* Single global noise overlay — covers sidebar, header, and content */}
+      <div style={{ position: "fixed", inset: 0, zIndex: 1, pointerEvents: "none" }}>
+        <NoiseTexture />
+      </div>
+
       <Sidebar 
         collapsed={collapsed} 
         onCollapse={setCollapsed} 
@@ -63,7 +68,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       />
 
       <Layout style={{ background: "transparent", position: "relative" }}>
-        <NoiseTexture />
         <Header 
           pageTitle={pathname.startsWith("/leads") ? "Leads Management" : "Dashboard"}
           collapsed={collapsed} 

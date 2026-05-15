@@ -9,7 +9,7 @@ import {
   AimOutlined,
 } from "@ant-design/icons";
 
-import NoiseTexture from "../effects/NoiseTexture";
+
 
 
 interface MobileMenuProps {
@@ -52,7 +52,6 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ visible, onClose }) => {
         header: { display: "none" }
       }}
     >
-      <NoiseTexture />
       <div className="h-full flex flex-col relative z-10">
         <div className="flex items-center h-16 px-6 border-b border-[#1E2B27]">
           <div className="mr-3 flex items-center justify-center">

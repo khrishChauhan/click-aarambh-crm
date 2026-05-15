@@ -9,7 +9,7 @@ import {
   AimOutlined,
 } from "@ant-design/icons";
 
-import NoiseTexture from "../effects/NoiseTexture";
+
 
 const { Sider } = Layout;
 
@@ -62,7 +62,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse, isMobile }) =>
       }}
       className={isMobile ? "hidden" : ""}
     >
-      <NoiseTexture />
       <div className="flex flex-col h-full relative z-10">
 
         <div 

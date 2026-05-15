@@ -14,7 +14,7 @@ import {
 
 import { useRouter } from "next/navigation";
 import { logout } from "@/lib/auth";
-import NoiseTexture from "../effects/NoiseTexture";
+
 
 const { Header: AntHeader } = Layout;
 
@@ -58,7 +58,6 @@ const Header: React.FC<HeaderProps> = ({
       }}
 
     >
-      <NoiseTexture />
       <div className="flex items-center justify-between h-full relative z-10 w-full">
 
       {/* Left Section */}
