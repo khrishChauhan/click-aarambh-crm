@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   DashboardOutlined,
   TeamOutlined,
+  CalendarOutlined,
   AimOutlined,
 } from "@ant-design/icons";
 
@@ -35,13 +36,18 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onCollapse, isMobile }) =>
       icon: <TeamOutlined />,
       label: "Leads",
     },
+    {
+      key: "/meetings",
+      icon: <CalendarOutlined />,
+      label: "Meetings",
+    },
   ];
 
   const handleMenuClick = (e: { key: string }) => {
     router.push(e.key);
   };
 
-  const activeKey = pathname.startsWith("/leads") ? "/leads" : "/dashboard";
+  const activeKey = pathname.startsWith("/leads") ? "/leads" : pathname.startsWith("/meetings") ? "/meetings" : "/dashboard";
 
   return (
     <Sider

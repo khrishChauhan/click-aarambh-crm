@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   DashboardOutlined,
   TeamOutlined,
+  CalendarOutlined,
   AimOutlined,
 } from "@ant-design/icons";
 
@@ -32,6 +33,11 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ visible, onClose }) => {
       icon: <TeamOutlined />,
       label: "Leads",
     },
+    {
+      key: "/meetings",
+      icon: <CalendarOutlined />,
+      label: "Meetings",
+    },
   ];
 
   const handleMenuClick = (e: { key: string }) => {
@@ -39,7 +45,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ visible, onClose }) => {
     onClose();
   };
 
-  const activeKey = pathname.startsWith("/leads") ? "/leads" : "/dashboard";
+  const activeKey = pathname.startsWith("/leads") ? "/leads" : pathname.startsWith("/meetings") ? "/meetings" : "/dashboard";
 
   return (
     <Drawer

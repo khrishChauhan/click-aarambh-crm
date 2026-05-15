@@ -69,7 +69,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <Layout style={{ background: "transparent", position: "relative" }}>
         <Header 
-          pageTitle={pathname.startsWith("/leads") ? "Leads Management" : "Dashboard"}
+          pageTitle={pathname.startsWith("/leads") ? "Leads Management" : pathname.startsWith("/meetings") ? "Meetings" : "Dashboard"}
           collapsed={collapsed} 
           onToggleCollapse={() => setCollapsed(!collapsed)} 
           isMobile={isMobile}
