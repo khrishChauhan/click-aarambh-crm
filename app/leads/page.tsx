@@ -64,10 +64,6 @@ export default function LeadsPage() {
     fetchLeads();
   };
 
-  const handleView = (record: any) => {
-    setSelectedLead(record);
-    setDrawerVisible(true);
-  };
 
   const handleEdit = (record: any) => {
     setSelectedLead(record);
