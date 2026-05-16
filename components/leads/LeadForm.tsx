@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Form, Input, Button, message, Select, DatePicker, Row, Col } from "antd";
+import { Form, Input, Button, message, Select, Row, Col } from "antd";
 import axios from "axios";
-import { useTheme } from "../ThemeProvider";
 
 interface LeadFormProps {
   onSuccess: () => void;
@@ -19,7 +18,6 @@ const { TextArea } = Input;
 const LeadForm: React.FC<LeadFormProps> = ({ onSuccess, onCancel, initialValues, isEdit }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const { isDarkMode } = useTheme();
 
   const onFinish = async (values: Record<string, any>) => {
 
