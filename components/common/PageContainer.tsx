@@ -18,7 +18,7 @@ const PageContainer: React.FC<PageContainerProps> = ({ children, title, descript
   return (
     <div className="max-w-7xl mx-auto w-full">
       <div className="flex justify-between items-start mb-8 flex-wrap gap-4">
-        <Space direction="vertical" size={4} className="w-full sm:w-auto">
+        <Space orientation="vertical" size={4} className="w-full sm:w-auto">
           {minimal ? (
             <Typography.Title level={2} style={{ margin: 0, color: '#E6F0ED', fontWeight: 600 }}>
               {title}

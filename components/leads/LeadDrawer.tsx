@@ -38,7 +38,6 @@ const LeadDrawer: React.FC<LeadDrawerProps> = ({
       placement="right"
       onClose={onClose}
       open={visible}
-      width={typeof window !== 'undefined' && window.innerWidth < 768 ? "100%" : 560}
       styles={{ 
         body: { 
           padding: "24px",
@@ -52,6 +51,9 @@ const LeadDrawer: React.FC<LeadDrawerProps> = ({
         content: {
           background: "#111C18",
           borderLeft: "1px solid #1E2B27",
+        },
+        wrapper: {
+          width: typeof window !== 'undefined' && window.innerWidth < 768 ? "100%" : "560px",
         }
       }}
 
@@ -104,7 +106,7 @@ const LeadDrawer: React.FC<LeadDrawerProps> = ({
         </Space>
       }
       closable={false}
-      destroyOnClose
+      destroyOnHidden
     >
       {lead && (
         <LeadForm 

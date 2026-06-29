@@ -39,7 +39,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [isPublicPage, router]);
+  }, [isPublicPage, pathname, router]);
 
   if (isAuthChecking && !isPublicPage) {
     return <div style={{ height: "100vh", background: "#082220" }} />;

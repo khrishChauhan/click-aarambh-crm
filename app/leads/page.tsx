@@ -112,7 +112,7 @@ export default function LeadsPage() {
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
-        destroyOnClose
+        destroyOnHidden
         width={600}
       >
         <LeadForm onSuccess={handleCreateSuccess} onCancel={() => setModalVisible(false)} />
